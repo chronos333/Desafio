@@ -1,3 +1,3 @@
 # Desafio
 
-Este é um git hub apenas para demonstarr e organizar o meu projeto de desafio mobile
+Este é um git hub apenas para demonstar e organizar o meu projeto de desafio mobile
