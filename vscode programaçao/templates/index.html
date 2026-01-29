@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<a href="/add" class="btn btn-primary mb-3">+ Nova Tarefa</a>
+
+{% for task in tasks %}
+<div class="card mb-2 p-3 shadow-sm
+    {% if task.priority == 'Alta' %} border-danger
+    {% elif task.priority == 'Média' %} border-warning
+    {% else %} border-success {% endif %}">
+
+    <h5>
+        {% if task.done %}
+            <s>{{ task.title }}</s>
+        {% else %}
+            {{ task.title }}
+        {% endif %}
+    </h5>
+
+    <p class="mb-1">{{ task.description }}</p>
+    <small>Prioridade: {{ task.priority }}</small>
+
+    <div class="mt-2">
+        {% if not task.done %}
+        <a href="/done/{{ task.id }}" class="btn btn-success btn-sm">✔ Feita</a>
+        {% endif %}
+        <a href="/delete/{{ task.id }}" class="btn btn-danger btn-sm">🗑</a>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
