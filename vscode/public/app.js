@@ -1,9 +1,15 @@
 const btn = document.getElementById("btnAdicionarTarefa");
 const lista = document.getElementById("listaTarefas");
 
-document.addEventListener("DOMContentLoaded", carregarTarefas);
+let tarefas = [];
 
-btn.addEventListener("click", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+  const dados = localStorage.getItem("tarefas");
+  tarefas = dados ? JSON.parse(dados) : [];
+  tarefas.forEach((t, i) => renderizar(t, i));
+});
+
+btn.addEventListener("click", () => {
   const tarefa = {
     nome: nomeTarefa.value.trim(),
     descricao: descricaoTarefa.value.trim(),
@@ -16,24 +22,19 @@ btn.addEventListener("click", async () => {
     return;
   }
 
-  await fetch("/tarefas", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(tarefa)
-  });
+  tarefas.push(tarefa);
+  salvar();
+  renderizar(tarefa, tarefas.length - 1);
 
-  renderizar(tarefa);
   bootstrap.Modal.getInstance(modalTarefa).hide();
   limpar();
 });
 
-async function carregarTarefas() {
-  const res = await fetch("/tarefas");
-  const tarefas = await res.json();
-  tarefas.forEach(renderizar);
+function salvar() {
+  localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
-function renderizar(t) {
+function renderizar(t, index) {
   const div = document.createElement("div");
   div.className = "card mb-2";
 
@@ -43,8 +44,19 @@ function renderizar(t) {
       <p>${t.descricao || ""}</p>
       <span class="badge bg-${cor(t.prioridade)}">${t.prioridade}</span>
       <small class="d-block text-muted mt-1">${t.dataHora || ""}</small>
+
+      <button class="btn btn-sm btn-danger mt-2">
+        Excluir
+      </button>
     </div>
   `;
+
+  div.querySelector("button").onclick = () => {
+    tarefas.splice(index, 1);
+    salvar();
+    lista.innerHTML = "";
+    tarefas.forEach((t, i) => renderizar(t, i));
+  };
 
   lista.appendChild(div);
 }
@@ -61,3 +73,4 @@ function limpar() {
   prioridadeTarefa.value = "baixa";
   dataHoraTarefa.value = "";
 }
+// feat by: ghost7
