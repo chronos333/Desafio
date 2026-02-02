@@ -73,4 +73,3 @@ function limpar() {
   prioridadeTarefa.value = "baixa";
   dataHoraTarefa.value = "";
 }
-// feat by: ghost7
